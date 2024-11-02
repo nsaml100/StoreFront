@@ -2,14 +2,9 @@
     "name": "Canvas Start",
     "short_name": "Start",
     "start_url": ".",
+    "display": "standalone",
     "background-color": "rgba(51, 51, 119, 1)",
-    "color": "rgba(51, 51, 119, 1)",
-    "background-color": "#56CCF2",
-    "color": "#333",
-    "background-color": "#EB5757",
-    "background-color": "#CC4C4C",
-    "border": "1px solid #56CCF2",
-    "background-color": "#eee",
+    "theme_color" : "#333",
     "icons": [
         {
             "src": "Album 1.jpg",

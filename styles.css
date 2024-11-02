@@ -1,6 +1,6 @@
 * {
     box-sizing: border-box;
-    color: #777;
+    theme_color: #333;
 }
 html, body {
     margin: 0;
@@ -10,7 +10,7 @@ html, body {
 
 button {
     color: white;
-    background-color: #56CCF2;
+    background-color: rgba(51, 51, 119, 1);
     max-width: 19%
     border: none;
     border-radius: .3em;
@@ -18,7 +18,7 @@ button {
 }
 
 button:hover {
-    background-color: #2D9CDB
+    background-color: rgba(51, 51, 119, 1);
 }
 
 .main-header {
@@ -64,7 +64,7 @@ button:hover {
     text-align: center;
     font-weight: bold;
     font-size: 1.5em;
-    color: #333;
+    theme_color: #333;
     text-align: center;
     margin-bottom: 15px;
 }
@@ -79,7 +79,7 @@ button:hover {
 }
 .shop-item-price {
     flex-grow: 1;
-    color: #333;
+    theme_color: #333;
 }
 
 .shop-items {
@@ -89,7 +89,7 @@ button:hover {
 }
 
 .cart-header {
-    color: #333;
+    theme_color: #333;
 }
 cart-column {
     display: flex;
@@ -110,13 +110,13 @@ cart-column {
 .cart-price {
     width: 20%;
     font-size: 1.2em;
-    color: #333;
+    theme_color: #333;
 }
 .cart-quantity {
     width: 35%;
 }
 .cart-item-title {
-    color: #333;
+    theme_color: #333;
     margin-left: .5em;
     font-size: 1.2em;
 }
@@ -128,23 +128,17 @@ cart-column {
 }
 .btn-danger {
     color: white;
-    background-color: #EB5757;
+    background-color: rgba(51, 51, 119, 1);
     border: none;
     border-radius: .3em;
     font-weight: bold;
-}
-
-.btn-danger:hover {
-    background-color: #CC4C4C;
 }
 
 .cart-quantity-input {
     height: 34px;
     width: 50px;
     border-radius: 5px;
-    border: 1px solid #56CCF2;
-    background-color: #eee;
-    color: #333;
+    theme_color: #333;
     padding: 0;
     text-align: center;
     font-size: 1.2em;
@@ -163,7 +157,7 @@ cart-column {
     margin-right: 20px;
 }
 .cart-total-price {
-    color: #333;
+    theme_color: #333;
     font-size: 1.1em;
 }
 .btn-purchase {
