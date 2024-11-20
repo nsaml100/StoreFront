@@ -141,3 +141,64 @@ const editData = (cartId, quantity) => {
   }
   firebase.database().ref('store/' +  cartId).update(changes);
 }
+
+
+//indexedDB
+async function createDB() {
+  const db = await openDB("taskManager", 1, {
+    upgrade(db) {
+      const store = db.createObjectStore("tasks", {
+        keyPath: "id",
+        autoIncrement: true,
+      });
+      store.createIndex("status", "status");
+    },
+  });
+  return db;
+}
+async function addTask(task) {
+  const db = await createDB();
+  const tx = db.transaction("tasks", "readwrite");
+  const store = tx.objectStore("tasks");
+
+  await store.add(task);
+
+  await tx.done;
+
+}
+
+async function deleteTask(id) {
+  const db = await createDB();
+
+  const tx = db.transaction("tasks", "readwrite");
+  const store = tx.objectStore("tasks");
+
+  await store.delete(id);
+
+  await tx.done;
+  const taskCard = document.queryselector('cart-item-id="${id}"');
+  if (taskCard) {
+    taskCard.remove()
+  }
+}
+
+async function loadTasks() {
+  const db await createDB();
+
+  const tx = db.transaction("tasks", "readwonly");
+  const store = tx.objectStore("tasks");
+
+  const tasks = await store.getAll();
+
+  await tx.done;
+
+  const taskContainer = document.queryselector(".tasks")
+  taskContainer.innerhtml = "";
+  tasks.forEach((task) => {
+    displayTask(task);
+  });
+}
+
+function displayTask(task) {
+  $("#table_body1").append('<tr><td class="cart-item-id">' + cellNum + '</td><td class="cart-item-title">' + title + '</td><td class="cart-item-price">'+ price + '</td><td class="cart-item-quantity">'+ quantity + '</td><td>' + '<button class="btn btn-danger" type="button">REMOVE</button>'+ '</td><td>'  + '<input type="number" class="new-quantity" id="new-quantity" name="new-quantity" min="1" max="100" />' + '</td><td>'  + '<button class="btn btn-edit" type="button">EDIT</button>' + '</td></tr>')
+}
