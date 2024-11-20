@@ -2,6 +2,7 @@
     <head>
         <title>The Lonely Canvas | Store</title>
         <link rel="stylesheet" href="styles.css" />
+        <link rel="manifest" href="manifest.json">
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     </head>
     <body>
@@ -14,18 +15,24 @@
             </nav>
         </header>
 
-        <section class="container content-section">
-            <h2 class="section-header">About</h2>
-            
-        </section>
+        <h1>Orders</h1>
+        <table border="5">
+            <thead>
+                <tr>
+                    <th>ID</th><th>Item</th><th>Price</th><th>Quantity</th><th>Remove</th><th>New Quantity</th><th>Edit</th></tr>
+
+            </thead>
+            <tbody id="table_body1">
+                
+            </tbody>
+        </table> 
 
         
         <footer class="main-footer">
             <div class="container main-footer-container">
                 <h3 class="canvas-name">The Lonely Canvas</h3>
-                <img class="about-image" src="Album 4.jpg">
-        <h1 class="section-header">Welcome</h1>
-        <p1 class="about">This site is a progressive web app that allows the user to browse a art shop's inventory without needing any internet connectivity. Once visted, the user should be able to access and interact with the site both online and offline. There is a notification saying when a user's purchase has been sent.</p1>
             </div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+        <script type="module" src="firebase.js" async></script>
         </footer>
     </body>

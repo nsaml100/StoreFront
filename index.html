@@ -3,13 +3,14 @@
         <title>The Lonely Canvas | Store</title>
         <link rel="stylesheet" href="styles.css" />
         <link rel="manifest" href="manifest.json">
-        <script src="store.js" async></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     </head>
     <body>
         <header class="main-header">
             <h1 class="canvas-name canvas-name-large">The Lonely Canvas</h1>
             <nav class="navbar">
                 <a href="index.html">Store Page</a>
+                <a href="Orders.html">Orders</a>
                 <a href="about.html">About</a>
             </nav>
         </header>
@@ -22,7 +23,7 @@
                     <img class="shop-item-image" src="Album 1.jpg">
                     <div class="shop-item-details">
                         <span class="shop-item-price">$12.99</span>
-                        <button class="btn btn-primary shop-item-button" type="button">ADD TO CART</button>
+                        <button class="btn btn-primary shop-item-button" type="button">Purchase</button>
                     </div>
                 </div>
                 <div class="shop-item">
@@ -30,7 +31,7 @@
                     <img class="shop-item-image" src="Album 2.jpg">
                     <div class="shop-item-details">
                         <span class="shop-item-price">$14.99</span>
-                        <button class="btn btn-primary shop-item-button"type="button">ADD TO CART</button>
+                        <button class="btn btn-primary shop-item-button"type="button">Purchase</button>
                     </div>
                 </div>
                 <div class="shop-item">
@@ -38,32 +39,19 @@
                     <img class="shop-item-image" src="Album 3.jpg">
                     <div class="shop-item-details">
                         <span class="shop-item-price">$9.99</span>
-                        <button class="btn btn-primary shop-item-button" type="button">ADD TO CART</button>
+                        <button class="btn btn-primary shop-item-button" type="button">Purchase</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="container content-section">
-            <h2 class="section-header">CART</h2>
-            <div class="cart-row">
-                <div class="cart-item cart-header cart-column">ITEM</div>
-                <div class="cart-price cart-header cart-column">PRICE</div>
-                <div class="cart-quantity cart-header cart-column">QUANTITY</div>
-            </div>
-            
-            <div class="cart-items">
-                
-            </div>
-            <div class="cart-total">
-                <strong class="cart-total-title">Total</strong>
-                <span class="cart-total-price">$0</span>
-            </div>
-            <button class="btn btn-primary btn-purchase" type="button">PURCHASE</button>
-        </section>
+        
         <footer class="main-footer">
             <div class="container main-footer-container">
                 <h3 class="canvas-name">The Lonely Canvas</h3>
             </div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+        <script type="module" src="firebase.js" async></script>
+        <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
         </footer>
     </body>
