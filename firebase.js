@@ -16,6 +16,7 @@
   measurementId: "G-RJW5HC2KTD"
 };
 
+
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
 
@@ -48,7 +49,7 @@ async function ready() {
         button.addEventListener('click', editCartItem)
       }
 }
-async function addToCartClicked(event) {
+function addToCartClicked(event) {
     var button = event.target
     var shopItem = button.parentElement.parentElement
     var title = shopItem.getElementsByClassName('shop-item-title')[0].innerText
@@ -56,7 +57,7 @@ async function addToCartClicked(event) {
     var quantity = "1"
     console.log(title, price, quantity)
     alert('Thank you for your purchase')
-    saveData(title, price, quantity);
+    fbAddToCartClicked(title, price, quantity);
 }
 async function removeCartItem(event) {
   console.log('clicked')
@@ -83,7 +84,7 @@ async function editCartItem(event) {
     cartItem.getElementsByClassName('cart-item-quantity')[0].innerText = cartItem.getElementsByClassName('new-quantity')[0].value
 }
 //add data
-const saveData = (title, price, quantity) => {
+const saveData = (qlength, title, price, quantity) => {
   var newPurchase = DBref.push();
 
   newPurchase.set({
@@ -91,6 +92,7 @@ const saveData = (title, price, quantity) => {
     price: price,
     quantity: quantity
   })
+ deleteFromIndexedDB(qlength);
 }
 
 //get data
@@ -143,62 +145,143 @@ const editData = (cartId, quantity) => {
 }
 
 
-//indexedDB
-async function createDB() {
-  const db = await openDB("taskManager", 1, {
-    upgrade(db) {
-      const store = db.createObjectStore("tasks", {
-        keyPath: "id",
-        autoIncrement: true,
-      });
-      store.createIndex("status", "status");
-    },
+
+//indexeddb
+
+const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+
+const request = indexedDB.open("canvasStore", 1);
+
+request.onerror = function (event) {
+  console.error("An error occurred with indexedDB");
+  console.error(event)
+};
+
+request.onupgradeneeded = function () {
+  const db = request.result;
+  const store = db.createObjectStore("identity", { keyPath: "id", autoIncrement: true});
+  store.createIndex("price_prices", ["price"], { unique: true});
+  store.createIndex("price_quantity", ["price", "quantity"], { 
+    unique: false,
   });
-  return db;
-}
-async function addTask(task) {
-  const db = await createDB();
-  const tx = db.transaction("tasks", "readwrite");
-  const store = tx.objectStore("tasks");
+  store.createIndex("price_quantity_title", ["price", "quantity", "title"], { 
+    unique: false,
+  });
+};
 
-  await store.add(task);
+request.onsuccess = function () {
+  const db = request.result;
+  const transaction = db.transaction("identity", "readwrite");
 
-  await tx.done;
+  const store = transaction.objectStore("identity");
+  const priceIndex = store.index("price_prices");
+  const priceQuantityIndex = store.index("price_quantity");
+  const priceQuantityTitleIndex = store.index("price_quantity_title");
 
-}
-
-async function deleteTask(id) {
-  const db = await createDB();
-
-  const tx = db.transaction("tasks", "readwrite");
-  const store = tx.objectStore("tasks");
-
-  await store.delete(id);
-
-  await tx.done;
-  const taskCard = document.queryselector('cart-item-id="${id}"');
-  if (taskCard) {
-    taskCard.remove()
+  transaction.oncomplete = function() {
+    db.close();
   }
+};
+
+async function fbAddToCartClicked(title, price, quantity){
+    const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+
+    const request = indexedDB.open("canvasStore", 1);
+
+    request.onerror = function (event) {
+      console.error("An error occurred with indexedDB");
+      console.error(event)
+    };
+    request.onupgradeneeded = function () {
+      const db = request.result;
+      const store = db.createObjectStore("identity", { keyPath: "id", autoIncrement: true});
+      store.createIndex("price_prices", ["price"], { unique: true});
+      store.createIndex("price_quantity", ["price", "quantity"], { 
+        unique: false,
+      });
+      store.createIndex("price_quantity_title", ["price", "quantity", "title"], { 
+      unique: false,
+      });
+    };
+
+  request.onsuccess = function () {
+      const db = request.result;
+      const transaction = db.transaction("identity", "readwrite");
+
+      const store = transaction.objectStore("identity");
+      const priceIndex = store.index("price_prices");
+      const priceQuantityIndex = store.index("price_quantity");
+      const priceQuantityTitleIndex = store.index("price_quantity_title");
+
+
+      store.put({id: 1, price: price, quantity: quantity, title: title});
+
+      //store.put({id: 2, price: "temp2", quantity: "temp2", title: "Rome"});
+
+      //store.delete(2);
+      const idQuery = store.get(1);
+      const lookQuery = store.getAll();
+      var qlength = 1;
+
+      lookQuery.onsuccess = function () {
+      console.log('lookQuery', lookQuery.result);
+      console.log(lookQuery.result.length);
+      qlength = lookQuery.result.length + 1;
+      console.log(qlength);
+      loadIntoDb(qlength, price, quantity, title);
+    };
+    idQuery.onsuccess = function () {
+      console.log('idQuery', idQuery.result);
+    };
+
+    function loadIntoDb (qlength, price, quantity, title){
+      console.log(qlength);
+      store.put({id: qlength, price: price, quantity: quantity, title: title});
+    }
+    //store.put({id: qlength, price: price, quantity: quantity, title: title});
+
+    transaction.oncomplete = function() {
+      db.close();
+    }
+  saveData(qlength, title, price, quantity);
+  };
 }
 
-async function loadTasks() {
-  const db await createDB();
+async function deleteFromIndexedDB(qlength){
+    const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
-  const tx = db.transaction("tasks", "readwonly");
-  const store = tx.objectStore("tasks");
+    const request = indexedDB.open("canvasStore", 1);
 
-  const tasks = await store.getAll();
+    request.onerror = function (event) {
+      console.error("An error occurred with indexedDB");
+      console.error(event)
+    };
+    request.onupgradeneeded = function () {
+      const db = request.result;
+      const store = db.createObjectStore("identity", { keyPath: "id", autoIncrement: true});
+      store.createIndex("price_prices", ["price"], { unique: true});
+      store.createIndex("price_quantity", ["price", "quantity"], { 
+        unique: false,
+      });
+      store.createIndex("price_quantity_title", ["price", "quantity", "title"], { 
+      unique: false,
+      });
+    };
 
-  await tx.done;
+  request.onsuccess = function () {
+      const db = request.result;
+      const transaction = db.transaction("identity", "readwrite");
 
-  const taskContainer = document.queryselector(".tasks")
-  taskContainer.innerhtml = "";
-  tasks.forEach((task) => {
-    displayTask(task);
-  });
-}
+      const store = transaction.objectStore("identity");
+      const priceIndex = store.index("price_prices");
+      const priceQuantityIndex = store.index("price_quantity");
+      const priceQuantityTitleIndex = store.index("price_quantity_title");
 
-function displayTask(task) {
-  $("#table_body1").append('<tr><td class="cart-item-id">' + cellNum + '</td><td class="cart-item-title">' + title + '</td><td class="cart-item-price">'+ price + '</td><td class="cart-item-quantity">'+ quantity + '</td><td>' + '<button class="btn btn-danger" type="button">REMOVE</button>'+ '</td><td>'  + '<input type="number" class="new-quantity" id="new-quantity" name="new-quantity" min="1" max="100" />' + '</td><td>'  + '<button class="btn btn-edit" type="button">EDIT</button>' + '</td></tr>')
+
+      store.delete(qlength);
+
+    transaction.oncomplete = function() {
+      db.close();
+    }
+  };
 }
