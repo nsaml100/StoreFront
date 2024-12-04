@@ -12,6 +12,7 @@
                 <a href="index.html">Store Page</a>
                 <a href="Orders.html">Orders</a>
                 <a href="about.html">About</a>
+                <a href="login.html">Login</a>
             </nav>
         </header>
 
@@ -28,9 +29,12 @@
         </table>         
         <footer class="main-footer">
             <div class="container main-footer-container">
-                <h3 class="canvas-name">The Lonely Canvas</h3>
             </div>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
         <script type="module" src="firebase.js" async></script>
+        <script type="text/javascript">
+        const user = localStorage.getItem('key');
+        console.log(user);
+        </script>
         </footer>
     </body>

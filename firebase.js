@@ -22,6 +22,7 @@
 
   firebase.initializeApp(firebaseConfig);
   var DBref = firebase.database().ref("store");
+  var DBref2 = firebase.database().ref("users");
 
   if (document.readyState == 'loading'){
     document.addEventListener('DOMContentLoaded', ready)
@@ -30,6 +31,8 @@
 }
 
 async function ready() {
+
+    const user = localStorage.getItem('key');
     var addToCartButtons = document.getElementsByClassName('shop-item-button')
     for (var i = 0; i < addToCartButtons.length; i++) {
         var button = addToCartButtons[i]
@@ -57,7 +60,8 @@ function addToCartClicked(event) {
     var quantity = "1"
     console.log(title, price, quantity)
     alert('Thank you for your purchase')
-    fbAddToCartClicked(title, price, quantity);
+    const username = localStorage.getItem('key')
+    fbAddToCartClicked(title, price, quantity, username);
 }
 async function removeCartItem(event) {
   console.log('clicked')
@@ -84,13 +88,14 @@ async function editCartItem(event) {
     cartItem.getElementsByClassName('cart-item-quantity')[0].innerText = cartItem.getElementsByClassName('new-quantity')[0].value
 }
 //add data
-const saveData = (qlength, title, price, quantity) => {
+const saveData = (qlength, title, price, quantity, user) => {
   var newPurchase = DBref.push();
 
   newPurchase.set({
     title: title,
     price: price,
-    quantity: quantity
+    quantity: quantity,
+    user: user
   })
  deleteFromIndexedDB(qlength);
 }
@@ -109,12 +114,16 @@ firebase.database().ref().child("store").once("value", function (snapshot) {
   }
   */
 
-    var cellNum = childSnapshot.key
+    var cellNum = childSnapshot.key;
     var title = childSnapshot.child("title").val();
     var price = childSnapshot.child("price").val();
     var quantity = childSnapshot.child("quantity").val();
+    var username = childSnapshot.child("user").val();
     console.log(cellNum);
+    const user = localStorage.getItem('key');
+    if (user === username){
     $("#table_body1").append('<tr><td class="cart-item-id">' + cellNum + '</td><td class="cart-item-title">' + title + '</td><td class="cart-item-price">'+ price + '</td><td class="cart-item-quantity">'+ quantity + '</td><td>' + '<button class="btn btn-danger" type="button">REMOVE</button>'+ '</td><td>'  + '<input type="number" class="new-quantity" id="new-quantity" name="new-quantity" min="1" max="100" />' + '</td><td>'  + '<button class="btn btn-edit" type="button">EDIT</button>' + '</td></tr>')
+    }
   });
   linkButtons();
 });
@@ -150,7 +159,7 @@ const editData = (cartId, quantity) => {
 
 const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
-const request = indexedDB.open("canvasStore", 1);
+const request = indexedDB.open("canvasStore3", 1);
 
 request.onerror = function (event) {
   console.error("An error occurred with indexedDB");
@@ -165,6 +174,9 @@ request.onupgradeneeded = function () {
     unique: false,
   });
   store.createIndex("price_quantity_title", ["price", "quantity", "title"], { 
+    unique: false,
+  });
+  store.createIndex("price_quantity_title_username", ["price", "quantity", "title", "username"], { 
     unique: false,
   });
 };
@@ -183,10 +195,10 @@ request.onsuccess = function () {
   }
 };
 
-async function fbAddToCartClicked(title, price, quantity){
+async function fbAddToCartClicked(title, price, quantity, username){
     const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
-    const request = indexedDB.open("canvasStore", 1);
+    const request = indexedDB.open("canvasStore3", 1);
 
     request.onerror = function (event) {
       console.error("An error occurred with indexedDB");
@@ -202,6 +214,9 @@ async function fbAddToCartClicked(title, price, quantity){
       store.createIndex("price_quantity_title", ["price", "quantity", "title"], { 
       unique: false,
       });
+      store.createIndex("price_quantity_title_username", ["price", "quantity", "title", "username"], { 
+      unique: false,
+      });
     };
 
   request.onsuccess = function () {
@@ -212,9 +227,10 @@ async function fbAddToCartClicked(title, price, quantity){
       const priceIndex = store.index("price_prices");
       const priceQuantityIndex = store.index("price_quantity");
       const priceQuantityTitleIndex = store.index("price_quantity_title");
+      const priceQuantityTitleUsernameIndex = store.index("price_quantity_title_username");
 
 
-      store.put({id: 1, price: price, quantity: quantity, title: title});
+      store.put({id: 1, price: price, quantity: quantity, title: title, username: username});
 
       //store.put({id: 2, price: "temp2", quantity: "temp2", title: "Rome"});
 
@@ -228,29 +244,30 @@ async function fbAddToCartClicked(title, price, quantity){
       console.log(lookQuery.result.length);
       qlength = lookQuery.result.length + 1;
       console.log(qlength);
-      loadIntoDb(qlength, price, quantity, title);
+      loadIntoDb(qlength, price, quantity, title, username);
     };
     idQuery.onsuccess = function () {
       console.log('idQuery', idQuery.result);
     };
 
-    function loadIntoDb (qlength, price, quantity, title){
+    function loadIntoDb (qlength, price, quantity, title, username){
       console.log(qlength);
-      store.put({id: qlength, price: price, quantity: quantity, title: title});
+      store.put({id: qlength, price: price, quantity: quantity, title: title, username: username});
     }
-    //store.put({id: qlength, price: price, quantity: quantity, title: title});
+    //store.put({id: qlength, price: price, quantity: quantity, title: title, username: username});
 
     transaction.oncomplete = function() {
       db.close();
     }
-  saveData(qlength, title, price, quantity);
+  const user = localStorage.getItem('key');
+  saveData(qlength, title, price, quantity, user);
   };
 }
 
 async function deleteFromIndexedDB(qlength){
     const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
-    const request = indexedDB.open("canvasStore", 1);
+    const request = indexedDB.open("canvasStore3", 1);
 
     request.onerror = function (event) {
       console.error("An error occurred with indexedDB");
@@ -266,6 +283,9 @@ async function deleteFromIndexedDB(qlength){
       store.createIndex("price_quantity_title", ["price", "quantity", "title"], { 
       unique: false,
       });
+      store.createIndex("price_quantity_title", ["price", "quantity", "title", "username"], { 
+      unique: false,
+      });
     };
 
   request.onsuccess = function () {
@@ -276,6 +296,7 @@ async function deleteFromIndexedDB(qlength){
       const priceIndex = store.index("price_prices");
       const priceQuantityIndex = store.index("price_quantity");
       const priceQuantityTitleIndex = store.index("price_quantity_title");
+      const priceQuantityTitleUsernameIndex = store.index("price_quantity_title_username");
 
 
       store.delete(qlength);
@@ -285,3 +306,24 @@ async function deleteFromIndexedDB(qlength){
     }
   };
 }
+
+//create acct
+
+function createClicked() {
+    var button = event.target
+    var acct = button.parentElement.parentElement
+    var username = acct.getElementsByClassName('username')[0].value
+    var password = acct.getElementsByClassName('password')[0].value
+    console.log(username, password)
+    alert('account created')
+}
+
+const createAcct = (username, password) => {
+  var newAcct = DBref2.push();
+
+  newAcct.set({
+    username: title,
+    password: password
+  })
+}
+

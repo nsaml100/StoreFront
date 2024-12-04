@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Flashcard App - Login / Create Account</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS for styling -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+        <header class="main-header">
+            <h1 class="canvas-name canvas-name-large">The Lonely Canvas</h1>
+            <nav class="navbar">
+                <a href="index.html">Store Page</a>
+                <a href="Orders.html">Orders</a>
+                <a href="about.html">About</a>
+                <a href="login.html">Login</a>
+            </nav>
+        </header>
+    <div class="container">
+        <!-- Welcome Message -->
+        <h1>Welcome to the Lonely Canvas</h1>
+
+        <!-- Login Form -->
+        <div id="login-form">
+            <h2>Login</h2>
+            <form class="logins" action="" method="">
+                <label for="username">Username</label>
+                <input class="username"  type="text" id="username" name="username" required>
+
+                <label for="password">Password</label>
+                <input class="password"  type="password" id="password" name="password" required>
+
+                <button class="btn-login" type="submit">Login</button>
+            </form>
+            <div class="switch-form">
+                <p>Don't have an account? <a href="#" onclick="toggleForms()">Create one</a></p>
+            </div>
+        </div>
+
+        <!-- Account Creation Form (hidden initially) -->
+        <div id="create-account-form" style="display:none;">
+            <h2>Create Account</h2>
+            <form class="create" method="">
+                <!-- Student ID will be auto-generated on the server -->
+
+
+                <label for="username">Username</label>
+                <input class="cusername" type="text" id="username" name="username" required>
+
+                <label for="password">Password</label>
+                <input class="cpassword" type="password" id="password" name="password" required>
+
+
+                <button class="btn-create" type="submit" onclick="toggleForms()">Create Account</button>
+            </form>
+            <div class="switch-form">
+                <p>Already have an account? <a href="#" onclick="toggleForms()">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleForms() {
+            var loginForm = document.getElementById('login-form');
+            var createAccountForm = document.getElementById('create-account-form');
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                createAccountForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                createAccountForm.style.display = 'block';
+            }
+        }
+        const user = localStorage.getItem('key');
+        console.log(user);
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script type="module" src="CreateAcct.js" async></script>
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+</body>
+</html>
