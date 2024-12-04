@@ -184,3 +184,60 @@ cart-column {
     width: 100%;
     height: auto;
 }
+
+
+
+
+
+
+
+/* Welcome message styles */
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 2.5em;
+}
+
+.welcome-text {
+    text-align: center;
+    color: #333;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+
+
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+
+
+.switch-form {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.switch-form a {
+    color: #333;
+    text-decoration: none;
+}
+
+.switch-form a:hover {
+    text-decoration: underline;
+}
